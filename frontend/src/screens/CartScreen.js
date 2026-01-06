@@ -112,7 +112,7 @@ const CartScreen = (props) => {
                                     )}
                                   </select>
                                 </td>
-                                <td>${item.price}</td>
+                                <td>₹{item.price}</td>
                                 <td>
                                   <a className="remove" href="#">
                                     <fa

@@ -68,7 +68,7 @@ function Header(props) {
                         aria-haspopup="true"
                         aria-expanded="true"
                       >
-                        <i className="fa fa-usd" />
+                        <i className="fa fa-inr" />
                         USD
                         <span className="caret" />
                       </a>

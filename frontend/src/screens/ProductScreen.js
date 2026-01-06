@@ -85,7 +85,7 @@ const ProductScreen = (props) => {
                         <h3>{product.name}</h3>
                         <div className="aa-price-block">
                           <span className="aa-product-view-price">
-                            ${product.price}
+                          ₹{product.price}
                           </span>
                           <br />
                           <br />
@@ -296,9 +296,9 @@ const ProductScreen = (props) => {
                             <h4 className="aa-product-title">
                               <a href="#">{product.name}</a>
                             </h4>
-                            <span className="aa-product-price">$45.50</span>
+                            <span className="aa-product-price">₹45.50</span>
                             <span className="aa-product-price">
-                              <del>${product.price}</del>
+                              <del>₹{product.price}</del>
                             </span>
                           </figcaption>
                         </figure>
@@ -387,7 +387,7 @@ const ProductScreen = (props) => {
                                 <h3>{product.name}</h3>
                                 <div className="aa-price-block">
                                   <span className="aa-product-view-price">
-                                    ${product.price}
+                                  ₹{product.price}
                                   </span>
                                   <p className="aa-product-avilability">
                                     Avilability: <span>In stock</span>

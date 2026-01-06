@@ -97,9 +97,9 @@ const HomeScreen = (props) => {
                     <h4 className="aa-product-title">
                       <a href="#">{product.name}</a>
                     </h4>
-                    <span className="aa-product-price">${product.price}</span>
+                    <span className="aa-product-price">₹{product.price}</span>
                     <span className="aa-product-price">
-                      <del>$100</del>
+                      <del>₹100</del>
                     </span>
                   </figcaption>
                 </figure>

@@ -391,7 +391,7 @@ function ShippingScreen(props) {
                               {cartItems.map((item) => (
                                 <tr>
                                   <td>{item.name}</td>
-                                  <td>${item.price}</td>
+                                  <td>₹{item.price}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -399,7 +399,7 @@ function ShippingScreen(props) {
                               <tr>
                                 <th>Subtotal</th>
                                 <td>
-                                  ${" "}
+                                  ₹{" "}
                                   {cartItems.reduce(
                                     (a, c) => a + c.price * c.qty,
                                     0
@@ -408,11 +408,11 @@ function ShippingScreen(props) {
                               </tr>
                               <tr>
                                 <th>Tax</th>
-                                <td>$35</td>
+                                <td>₹35</td>
                               </tr>
                               <tr>
                                 <th>Total</th>
-                                <td>$785</td>
+                                <td>₹785</td>
                               </tr>
                             </tfoot>
                           </table>
