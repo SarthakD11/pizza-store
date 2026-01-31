@@ -5,6 +5,8 @@ import path from "path";
 import data from "./data";
 import config from "./config";
 import userRoute from "./routes/userRoute";
+import assistantRoute from "./routes/assistantRoute.js";
+
 
 const app = express();
 
@@ -35,6 +37,8 @@ mongoose
 // API Routes
 // =====================
 app.use("/api/users", userRoute);
+app.use("/api/assistant", assistantRoute);
+
 
 app.get("/api/products", (req, res) => {
   res.send(data.products);

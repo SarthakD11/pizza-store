@@ -1,27 +1,31 @@
-import React, { useEffect } from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { listProducts } from "../actions/productActions";
 import { detailsProduct } from "../actions/productActions";
 import Slider from "../components/Slider";
 import Testimonial from "../components//Testimonial";
+import PizzaAssistantModal from "../components/PizzaAssistantModal";
+
 
 const HomeScreen = (props) => {
   const productList = useSelector((state) => state.productList);
 
   const { products, loading, error } = productList;
+  const [showAssistant, setShowAssistant] = useState(false);
+
 
   console.log(products);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listProducts());
-    dispatch(detailsProduct(props.match.params.id));
+  }, [dispatch]);
 
-    return () => {
-      //
-    };
-  }, []);
   const handleAddToCart = () => {
     props.history.push("/product/");
   };
@@ -46,6 +50,7 @@ const HomeScreen = (props) => {
         </div>
       </div>
       <Slider />
+
       <section id="aa-popular-category">
         <div className="container">
           <div className="row">
@@ -159,100 +164,25 @@ const HomeScreen = (props) => {
           </div>
         </div>
       </section>
-
       <Testimonial />
+      {showAssistant && (
+        <PizzaAssistantModal onClose={() => setShowAssistant(false)} />
+      )}
+      <button
+  className="btn btn-warning btn-lg"
+  onClick={() => setShowAssistant(true)}
+  style={{
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    zIndex: 9999,
+    borderRadius: "50px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+  }}
+>
+  🤖 Build My Pizza
+</button>
 
-      <div
-        className="modal fade"
-        id="quick-view-modal"
-        tabIndex={-1}
-        role="dialog"
-        aria-labelledby="myModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-body">
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-hidden="true"
-              >
-                ×
-              </button>
-              <div className="row">
-                {/* Modal view slider */}
-                <div className="col-md-6 col-sm-6 col-xs-12">
-                  <div className="aa-product-view-slider">
-                    <div className="simpleLens-gallery-container" id="demo-1">
-                      <div className="simpleLens-container">
-                        <div className="simpleLens-big-image-container">
-                          <a
-                            className="simpleLens-lens-image"
-                            data-lens-image="img/view-slider/large/polo-shirt-1.png"
-                          >
-                            <img
-                              src="img/view-slider/medium/polo-shirt-1.png"
-                              className="simpleLens-big-image"
-                            />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Modal view content */}
-                <div className="col-md-6 col-sm-6 col-xs-12">
-                  <div className="aa-product-view-content">
-                    <h3>100</h3>
-                    <div className="aa-price-block">
-                      <span className="aa-product-view-price">$34.99</span>
-                      <p className="aa-product-avilability">
-                        Avilability: <span>In stock</span>
-                      </p>
-                    </div>
-                    <p>Great pizza</p>
-                    <h4>Size</h4>
-                    <div className="aa-prod-view-size">
-                      <a href="#">S</a>
-                      <a href="#">M</a>
-                      <a href="#">L</a>
-                      <a href="#">XL</a>
-                    </div>
-                    <div className="aa-prod-quantity">
-                      <form action>
-                        <select name id>
-                          <option value={0} selected={1}>
-                            1
-                          </option>
-                          <option value={1}>2</option>
-                          <option value={2}>3</option>
-                          <option value={3}>4</option>
-                          <option value={4}>5</option>
-                          <option value={5}>6</option>
-                        </select>
-                      </form>
-                      <p className="aa-prod-category">
-                        Category: <a href="#">Tuna Fish</a>
-                      </p>
-                    </div>
-                    <div className="aa-prod-view-bottom">
-                      <Link to="/">
-                        <a href="#" className="aa-add-to-cart-btn">
-                          View Details
-                        </a>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* /.modal-content */}
-        </div>
-        {/* /.modal-dialog */}
-      </div>
     </>
   );
 };
