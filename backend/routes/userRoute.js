@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../models/userModel";
+import User from "../models/userModel.js";
 
 const router = express.Router();
 
@@ -9,13 +9,12 @@ router.post("/signin", async (req, res) => {
     password: req.body.password,
   });
   if (signinUser) {
-    res.send({
-      _id: signinUser.id,
-      name: signinUser.name,
-      email: signinUser.email,
-      isAdmin: signinUser.isAdmin,
-      token: getToken(user),
-    });
+   res.send({
+  _id: signinUser._id,
+  name: signinUser.name,
+  email: signinUser.email,
+  isAdmin: signinUser.isAdmin,
+});
   } else {
     res.status(401).send({ msg: "Invalid Email or Passowrd" });
   }

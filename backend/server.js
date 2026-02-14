@@ -1,10 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import path from "path";
+import Pizza from "./models/Pizza.js";
 
-import data from "./data";
-import config from "./config";
-import userRoute from "./routes/userRoute";
+// import data from "./data";
+import config from "./config.js";
+
+import userRoute from "./routes/userRoute.js";
 import assistantRoute from "./routes/assistantRoute.js";
 
 
@@ -40,18 +42,30 @@ app.use("/api/users", userRoute);
 app.use("/api/assistant", assistantRoute);
 
 
-app.get("/api/products", (req, res) => {
-  res.send(data.products);
+app.get("/api/products", async (req, res) => {
+  try {
+    const pizzas = await Pizza.find();
+    res.send(pizzas);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
 });
 
-app.get("/api/products/:id", (req, res) => {
-  const product = data.products.find(
-    (x) => x._id === req.params.id
-  );
 
-  if (product) res.send(product);
-  else res.status(404).send({ msg: "Product Not Found" });
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const pizza = await Pizza.findById(req.params.id);
+
+    if (pizza) {
+      res.send(pizza);
+    } else {
+      res.status(404).send({ message: "Product Not Found" });
+    }
+  } catch (error) {
+    res.status(400).send({ message: "Invalid Product ID" });
+  }
 });
+
 
 // =====================
 // Frontend (Production)

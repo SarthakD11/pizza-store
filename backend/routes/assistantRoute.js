@@ -1,76 +1,81 @@
 import express from "express";
-import data from "../data.js";
+import Pizza from "../models/Pizza.js";
 import { normalizeProduct } from "../utils/normalizeProduct.js";
 
 const router = express.Router();
 
-router.post("/build-pizza", (req, res) => {
-  const { budget, veg, spicy } = req.body;
+router.post("/build-pizza", async (req, res) => {
+  try {
+    const { budget, veg, spicy } = req.body;
 
-  // ✅ VALIDATION MUST BE INSIDE THE FUNCTION
-  if (typeof budget !== "number") {
-    return res.status(400).json({ error: "Budget must be a number" });
-  }
-
-  let scoredPizzas = data.products.map((rawPizza) => {
-    const pizza = normalizeProduct(rawPizza);
-
-    let score = 0;
-    let reasons = [];
-
-    // Budget
-    if (pizza.price <= budget) {
-      score += 3;
-      reasons.push("Fits within your budget");
-    } else {
-      score -= 2;
+    if (typeof budget !== "number") {
+      return res.status(400).json({ error: "Budget must be a number" });
     }
 
-    // Veg preference
-    if (veg) {
-      if (pizza.isVeg) {
+    // 🔥 FETCH FROM DATABASE
+    const pizzasFromDB = await Pizza.find();
+
+    let scoredPizzas = pizzasFromDB.map((rawPizza) => {
+      const pizza = normalizeProduct(rawPizza);
+
+      let score = 0;
+      let reasons = [];
+
+      // Budget
+      if (pizza.price <= budget) {
         score += 3;
-        reasons.push("Vegetarian friendly");
+        reasons.push("Fits within your budget");
       } else {
-        score -= 3;
+        score -= 2;
       }
-    }
 
-    // Spicy preference
-    if (spicy && pizza.isSpicy) {
-      score += 2;
-      reasons.push("Spicy flavor profile");
-    }
+      // Veg preference
+      if (veg) {
+        if (pizza.isVeg) {
+          score += 3;
+          reasons.push("Vegetarian friendly");
+        } else {
+          score -= 3;
+        }
+      }
 
-    // Protein (only if non-veg)
-    if (!veg) {
-      score += pizza.proteinLevel;
-    }
+      // Spicy preference
+      if (spicy && pizza.isSpicy) {
+        score += 2;
+        reasons.push("Spicy flavor profile");
+      }
 
-    // Rating
-    if (pizza.rating) {
-      score += pizza.rating;
-      reasons.push(`Highly rated (${pizza.rating}⭐)`);
-    }
+      if (!veg) {
+        score += pizza.proteinLevel || 0;
+      }
 
-    return {
-      ...pizza,
-      score,
-      reasons: [...new Set(reasons)],
-    };
-  });
+      if (pizza.rating) {
+        score += pizza.rating;
+        reasons.push(`Highly rated (${pizza.rating}⭐)`);
+      }
 
-  scoredPizzas.sort((a, b) => {
-    if (b.score === a.score) {
-      return a.price - b.price;
-    }
-    return b.score - a.score;
-  });
+      return {
+        ...pizza,
+        score,
+        reasons: [...new Set(reasons)],
+      };
+    });
 
-  res.json({
-    preferences: { budget, veg, spicy },
-    recommendations: scoredPizzas.slice(0, 3),
-  });
+    scoredPizzas.sort((a, b) => {
+      if (b.score === a.score) {
+        return a.price - b.price;
+      }
+      return b.score - a.score;
+    });
+
+    res.json({
+      preferences: { budget, veg, spicy },
+      recommendations: scoredPizzas.slice(0, 3),
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;
