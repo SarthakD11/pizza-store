@@ -1,17 +1,16 @@
+
+
+import config from "./config.js";
 import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 import Pizza from "./models/Pizza.js";
-
-// import data from "./data";
-import config from "./config.js";
-
+import paymentRoute from "./routes/paymentRoute.js";
 import userRoute from "./routes/userRoute.js";
 import assistantRoute from "./routes/assistantRoute.js";
 
 
 const app = express();
-
 
 // =====================
 // Config
@@ -24,6 +23,7 @@ const mongodbUrl = config.MONGODB_URL;
 // =====================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // =====================
 // MongoDB
@@ -40,6 +40,8 @@ mongoose
 // =====================
 app.use("/api/users", userRoute);
 app.use("/api/assistant", assistantRoute);
+app.use("/api/payment", paymentRoute);
+
 
 
 app.get("/api/products", async (req, res) => {

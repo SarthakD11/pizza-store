@@ -138,7 +138,7 @@ const CartScreen = (props) => {
                         <tr>
                           <th>Subtotal</th>
                           <td>
-                            ${" "}
+                            ₹{" "}
                             {cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
                           </td>
                         </tr>
