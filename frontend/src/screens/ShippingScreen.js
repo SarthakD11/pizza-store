@@ -78,8 +78,10 @@ function ShippingScreen(props) {
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
-              alert("Payment Successful 🎉");
-              props.history.push("/");
+              props.history.push(
+  `/order-success?orderId=${data.orderId}&paymentId=${response.razorpay_payment_id}`
+);
+
             } else {
               alert("Payment verification failed");
             }

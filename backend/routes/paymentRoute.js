@@ -11,7 +11,6 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-
 /*
 ========================================
 1️⃣ CREATE RAZORPAY ORDER
@@ -19,13 +18,19 @@ const razorpay = new Razorpay({
 */
 router.post("/create-order", async (req, res) => {
   try {
-    const { orderItems, totalPrice } = req.body;
+    const { orderItems } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: "No order items" });
     }
 
-    // Create order in DB first (Pending)
+    // 🔥 Calculate total securely in backend
+    const totalPrice = orderItems.reduce(
+      (acc, item) => acc + item.price * item.qty,
+      0
+    );
+
+    // Create order in DB (Pending)
     const order = new Order({
       orderItems,
       totalPrice,
@@ -77,11 +82,25 @@ router.post("/verify", async (req, res) => {
       .digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
-      return res.status(400).json({ success: false, message: "Invalid Signature" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Signature",
+      });
     }
 
-    // Update order as Paid
     const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Prevent double payment update
+    if (order.isPaid) {
+      return res.json({ success: true });
+    }
 
     order.isPaid = true;
     order.paidAt = Date.now();
