@@ -21,8 +21,8 @@ function Testimonial() {
                 <div className="col-md-4 col-sm-4 col-xs-12">
                   <div className="aa-support-single">
                     <span className="fa fa-clock-o" />
-                    <h4>Deliver Piza in 30 mints</h4>
-                    <p>After Submited order you will get in 30 mint sharp.</p>
+                    <h4>Deliver Pizza in 30 minutes</h4>
+                    <p>After Submited order you will get in 30 minutes sharp.</p>
                   </div>
                 </div>
                 {/* single support */}

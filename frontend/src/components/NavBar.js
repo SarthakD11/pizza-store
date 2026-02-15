@@ -64,9 +64,7 @@ function NavBar() {
     ))}
   </ul>
 </li>
-                <li>
-                  <a href="#">Beverages</a>
-                </li>
+               
               </ul>
             </div>
           </div>
