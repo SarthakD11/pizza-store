@@ -8,6 +8,9 @@ import CheckoutScreen from "../screens/CheckoutScreen";
 import CartScreen from "../screens/CartScreen";
 import ShippingScreen from "../screens/ShippingScreen";
 import OrderSuccessScreen from "../screens/OrderSuccessScreen";
+import AccountScreen from "../screens/AccountScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 
 //Components
 import Header from "../components/Header";
@@ -27,6 +30,10 @@ export default class Main extends Component {
           <Route path="/Checkout" component={CheckoutScreen} />
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/order-success" component={OrderSuccessScreen} />
+          <Route path="/account" component={AccountScreen} />
+          <Route path="/login" component={LoginScreen} />
+          <Route path="/register" component={RegisterScreen} />
+          
           <Footer />
         </BrowserRouter>
       </div>

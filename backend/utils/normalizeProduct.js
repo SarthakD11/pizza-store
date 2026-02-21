@@ -1,9 +1,11 @@
 export function normalizeProduct(product) {
-  const name = product.name?.toLowerCase() || "";
-  const category = product.category?.toLowerCase() || "";
-  const brand = product.brand?.toLowerCase() || "";
+  // Convert Mongoose document to plain object
+  const plainProduct = product.toObject ? product.toObject() : product;
 
-  // Explicit signals (strongest)
+  const name = plainProduct.name?.toLowerCase() || "";
+  const category = plainProduct.category?.toLowerCase() || "";
+  const brand = plainProduct.brand?.toLowerCase() || "";
+
   const explicitVeg =
     name.includes("veg") ||
     name.includes("vegan") ||
@@ -19,28 +21,24 @@ export function normalizeProduct(product) {
     brand.includes("meat") ||
     name.includes("bbq");
 
-  // Final flags (priority-based)
   const isVeg = explicitVeg;
   const isFish = !explicitVeg && explicitFish;
   const isMeat = !explicitVeg && !explicitFish && explicitMeat;
 
-  // Spicy
   const isSpicy =
     brand.includes("spicy") ||
     name.includes("bbq") ||
     name.includes("pepper");
 
-  // Normalized category (veg has highest priority)
   let normalizedCategory = "veg";
   if (isFish) normalizedCategory = "fish";
   if (isMeat) normalizedCategory = "meat";
 
-  // Protein (derived)
   let proteinLevel = 1;
   if (isFish || isMeat) proteinLevel = 4;
 
   return {
-    ...product,
+    ...plainProduct,   // ✅ IMPORTANT FIX
     normalizedCategory,
     isVeg,
     isSpicy,

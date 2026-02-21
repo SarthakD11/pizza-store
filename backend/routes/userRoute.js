@@ -3,35 +3,59 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-router.post("/signin", async (req, res) => {
-  const signinUser = await User.findOne({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  if (signinUser) {
-   res.send({
-  _id: signinUser._id,
-  name: signinUser.name,
-  email: signinUser.email,
-  isAdmin: signinUser.isAdmin,
-});
-  } else {
-    res.status(401).send({ msg: "Invalid Email or Passowrd" });
+/*
+========================
+REGISTER USER
+========================
+*/
+router.post("/register", async (req, res) => {
+  try {
+    const userExists = await User.findOne({ email: req.body.email });
+
+    if (userExists) {
+      return res.status(400).send({ message: "User already exists" });
+    }
+
+    const user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      isAdmin: false,
+    });
+
+    const createdUser = await user.save();
+
+    res.send({
+      _id: createdUser._id,
+      name: createdUser.name,
+      email: createdUser.email,
+      isAdmin: createdUser.isAdmin,
+    });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
   }
 });
 
-router.get("/createadmin", async (req, res) => {
-  try {
-    const user = new User({
-      name: "abdul",
-      email: "wahab3060@gmail.com",
-      password: "1234",
-      isAdmin: true,
+/*
+========================
+LOGIN USER
+========================
+*/
+router.post("/login", async (req, res) => {
+  const user = await User.findOne({
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  if (user) {
+    res.send({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
-    const newUser = await user.save();
-    res.send(newUser);
-  } catch (error) {
-    res.send({ msg: error.message });
+  } else {
+    res.status(401).send({ message: "Invalid email or password" });
   }
 });
 
